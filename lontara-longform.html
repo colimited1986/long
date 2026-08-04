@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lontara — Long Form</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#14110E;
+    --surface:#1D1811;
+    --surface-2:#241D14;
+    --border:#3A2E1F;
+    --border-soft:#2A2218;
+    --text:#EDE3D3;
+    --text-muted:#A3937A;
+    --text-faint:#6F6350;
+    --accent:#C77D3E;
+    --accent-soft:#7A4E28;
+    --accent-text:#F2C79B;
+    --good:#6E9B7B;
+    --bad:#C0605A;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --radius:10px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(199,125,62,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    padding-bottom:80px;
+  }
+
+  ::selection{ background:var(--accent-soft); color:var(--text); }
+
+  a{ color:var(--accent-text); }
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:28px 18px 40px;
+  }
+
+  header.hero{
+    padding:18px 4px 30px;
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:22px;
+  }
+  header.hero .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent-text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  header.hero .eyebrow::before{
+    content:'';
+    width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 3px rgba(199,125,62,0.18);
+  }
+  header.hero h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-optical-sizing:auto;
+    font-size:clamp(28px,4.4vw,40px);
+    margin:8px 0 6px;
+    letter-spacing:-0.01em;
+  }
+  header.hero p{
+    color:var(--text-muted);
+    font-size:14.5px;
+    max-width:64ch;
+    margin:0;
+  }
+
+  .warn-banner{
+    background:rgba(192,96,90,0.10);
+    border:1px solid rgba(192,96,90,0.35);
+    color:#E3A29E;
+    padding:12px 14px;
+    border-radius:var(--radius);
+    font-size:13px;
+    margin:16px 0;
+    display:none;
+  }
+  .warn-banner.show{ display:block; }
+
+  /* ---- Accordion sections ---- */
+  section.panel{
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  section.panel > .panel-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px 18px;
+    cursor:pointer;
+    user-select:none;
+  }
+  section.panel > .panel-head .num{
+    font-family:var(--font-mono);
+    color:var(--accent-text);
+    font-size:13px;
+    width:26px;
+    flex-shrink:0;
+  }
+  section.panel > .panel-head h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:18px;
+    margin:0;
+    flex:1;
+  }
+  section.panel > .panel-head .chev{
+    color:var(--text-faint);
+    transition:transform .18s ease;
+    font-size:13px;
+  }
+  section.panel.open > .panel-head .chev{ transform:rotate(180deg); }
+  section.panel > .panel-body{
+    display:none;
+    padding:2px 18px 20px;
+    border-top:1px solid var(--border-soft);
+  }
+  section.panel.open > .panel-body{ display:block; }
+
+  .field{ margin:14px 0; }
+  .field label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--text-muted);
+    margin-bottom:6px;
+    letter-spacing:0.01em;
+  }
+  .field .hint{
+    font-size:12px;
+    color:var(--text-faint);
+    margin-top:5px;
+    line-height:1.5;
+  }
+  input[type=text], input[type=number], input[type=password], textarea, select{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:var(--font-body);
+    font-size:13.5px;
+    outline:none;
+  }
+  textarea{ resize:vertical; min-height:90px; font-family:var(--font-mono); font-size:12.5px; }
+  input:focus, textarea:focus, select:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(199,125,62,0.15); }
+
+  .row{ display:flex; gap:12px; flex-wrap:wrap; }
+  .row > .field{ flex:1; min-width:160px; }
+
+  .toggle-group{ display:flex; gap:8px; flex-wrap:wrap; }
+  .toggle-opt{
+    flex:1;
+    min-width:140px;
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--text-muted);
+    padding:10px 12px;
+    border-radius:8px;
+    text-align:center;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .toggle-opt.active{
+    border-color:var(--accent);
+    background:rgba(199,125,62,0.12);
+    color:var(--accent-text);
+    font-weight:600;
+  }
+
+  button{
+    font-family:var(--font-body);
+    cursor:pointer;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--text);
+    padding:10px 16px;
+    font-size:13.5px;
+    font-weight:600;
+  }
+  button:hover{ border-color:var(--text-faint); }
+  button.primary{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#1A1108;
+  }
+  button.primary:hover{ background:#D68B4B; }
+  button.ghost{ background:transparent; }
+  button:disabled{ opacity:0.45; cursor:not-allowed; }
+  button small{ font-weight:400; opacity:0.75; }
+
+  .btn-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+
+  /* Chapter timeline — signature element */
+  .chapter-timeline{
+    display:flex;
+    border-radius:8px;
+    overflow:hidden;
+    height:46px;
+    border:1px solid var(--border);
+    margin:14px 0 8px;
+  }
+  .chapter-seg{
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--text);
+    border-right:1px solid var(--bg);
+    padding:0 6px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    position:relative;
+  }
+  .chapter-seg:last-child{ border-right:none; }
+  .chapter-legend{
+    display:flex; gap:14px; flex-wrap:wrap;
+    font-size:11.5px; color:var(--text-faint); font-family:var(--font-mono);
+    margin-bottom:8px;
+  }
+  .chapter-legend span{ display:flex; align-items:center; gap:5px; }
+  .chapter-legend i{ width:9px;height:9px;border-radius:2px;display:inline-block; }
+
+  /* Scene cards */
+  .scene-card{
+    border:1px solid var(--border-soft);
+    background:var(--surface-2);
+    border-radius:8px;
+    padding:12px 14px;
+    margin-bottom:10px;
+  }
+  .scene-card .scene-top{
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  .scene-card .scene-idx{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--accent-text);
+    background:rgba(199,125,62,0.12);
+    padding:2px 7px;
+    border-radius:5px;
+  }
+  .scene-card .scene-chapter-tag{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--text-faint);
+  }
+  .scene-card textarea{ min-height:52px; }
+  .scene-thumb{
+    width:100%;
+    aspect-ratio:16/9;
+    background:var(--bg);
+    border-radius:6px;
+    border:1px solid var(--border-soft);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-faint); font-size:11px;
+    overflow:hidden;
+    margin-bottom:8px;
+  }
+  .scene-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .scene-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  @media(max-width:520px){ .scene-grid{ grid-template-columns:1fr; } }
+
+  .badge{
+    display:inline-block;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    padding:2px 8px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    color:var(--text-muted);
+  }
+  .badge.on{ border-color:var(--good); color:var(--good); }
+
+  canvas#previewCanvas{
+    width:100%;
+    background:#000;
+    border-radius:8px;
+    border:1px solid var(--border-soft);
+    display:block;
+  }
+
+  .progress-bar{
+    height:6px; border-radius:4px; background:var(--surface-2);
+    overflow:hidden; margin-top:8px; border:1px solid var(--border-soft);
+  }
+  .progress-bar > div{
+    height:100%; width:0%; background:var(--accent);
+    transition:width .25s ease;
+  }
+
+  .code-out{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    white-space:pre-wrap;
+    color:var(--text-muted);
+    max-height:260px;
+    overflow:auto;
+  }
+
+  footer.foot{
+    text-align:center;
+    color:var(--text-faint);
+    font-size:11.5px;
+    font-family:var(--font-mono);
+    margin-top:30px;
+  }
+
+  .inline-note{
+    font-size:12px; color:var(--text-faint); margin-top:4px;
+  }
+
+  .pill-list{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .pill-list .pill{
+    font-family:var(--font-mono); font-size:11px;
+    background:var(--surface-2); border:1px solid var(--border);
+    padding:3px 9px; border-radius:20px; color:var(--text-muted);
+    cursor:pointer;
+  }
+  .pill-list .pill:hover{ border-color:var(--accent); color:var(--accent-text); }
+
+  .split-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:600px){ .split-2{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Lontara Studio · Alat Mandiri</div>
+    <h1>Long Form</h1>
+    <p>Thread/cerita netizen → naskah bab bertahap → 30–50 gambar AI → narasi suara AI → video 5–10 menit dengan chapter marker. Render 100% di browser, gratis, tanpa server.</p>
+  </header>
+
+  <div id="fileWarnBanner" class="warn-banner">
+    ⚠️ File ini sedang dibuka langsung dari penyimpanan HP (<code>file://</code>). Dalam mode ini, browser akan memblokir semua permintaan ke API — nanti pasti gagal dengan "Failed to fetch". Upload file ini ke hosting web (GitHub Pages, dsb) lalu buka dari alamat <code>https://...</code>-nya.
+  </div>
+
+  <main id="app"></main>
+
+  <footer class="foot">lontara long form · buatan lokal, jalan di browser kamu sendiri</footer>
+</div>
+
+<script>
+if (location.protocol === 'file:') {
+  document.getElementById('fileWarnBanner').classList.add('show');
+}
+</script>
+<script>
+/* ===================== Lontara Long Form — Core ===================== */
+(function(){
+"use strict";
+
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const uid = ()=> Math.random().toString(36).slice(2,9);
+const escapeHtml = (s='') => s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v,min,max)=> Math.max(min, Math.min(max,v));
+const fmtTime = (sec)=>{
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec/60), s = sec%60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+};
+
+const CAMERA_OPTS = [
+  {id:'kenburns', label:'Ken Burns (pan & zoom halus)'},
+  {id:'zoompunch', label:'Zoom Punch (cepat lalu tahan)'},
+  {id:'slide', label:'Slide (geser horizontal)'},
+  {id:'pushin', label:'Push In (mendekat)'},
+  {id:'pullout', label:'Pull Out (menjauh)'},
+  {id:'static', label:'Statis (nyaris diam)'},
+];
+
+const OVERLAY_STYLES = [
+  {id:'none', label:'Tanpa overlay'},
+  {id:'x', label:'Kartu X / Twitter'},
+  {id:'reddit', label:'Kartu Reddit'},
+  {id:'quora', label:'Kartu Quora'},
+  {id:'chat', label:'Bubble Chat/DM'},
+];
+
+const ASPECT_OPTS = [
+  {id:'16:9', label:'16:9 — Landscape (YouTube long-form)', w:1920, h:1080},
+  {id:'9:16', label:'9:16 — Vertical (Shorts/Reels)', w:1080, h:1920},
+  {id:'1:1',  label:'1:1 — Square', w:1080, h:1080},
+];
+
+const VISUAL_STYLES = [
+  {id:'cinematic', label:'Cinematic — dramatis, depth of field, warna sinematik', suffix:'cinematic photography, dramatic depth of field, filmic color grading, 35mm lens'},
+  {id:'misterius', label:'Misterius — gelap, bayangan tebal, mencekam', suffix:'dark moody atmosphere, thick shadows, low-key lighting, eerie tension'},
+  {id:'vintage', label:'Vintage — grain film lama, warna pudar nostalgik', suffix:'vintage film grain, faded nostalgic color, old photograph texture'},
+  {id:'sepia', label:'Arsip Sepia — sepia tua, tekstur foto kuno berdebu', suffix:'old sepia tone, dusty archival photograph texture, aged paper grain'},
+  {id:'realistis', label:'Realistis — fotografi natural, detail tinggi', suffix:'natural realistic photography, high detail, true to life lighting'},
+  {id:'dokumenter', label:'Dokumenter — gaya jurnalistik, natural', suffix:'documentary journalistic style, natural desaturated tone'},
+  {id:'artistik', label:'Ilustrasi Artistik — lukisan digital naratif', suffix:'narrative digital painting, artistic illustration style'},
+];
+
+const NEGATIVE_SUFFIX = 'clean background, no text, no typography, no captions, no watermark, no logos, no random letters';
+
+function defaultState(){
+  return {
+    api: {
+      scriptFormat: 'openai',
+      scriptBaseUrl: '',
+      scriptKey: '',
+      scriptModel: 'gpt-4o-mini',
+      imageProvider: 'fal',
+      imageKey: '',
+      ttsKey: '',
+      ttsVoiceId: '',
+      ttsModel: 'eleven_multilingual_v2',
+    },
+    lang: 'id',
+    inputMode: 'thread',
+    storyText: '',
+    topicText: '',
+    facts: '',
+    targetMinutes: 8,
+    visualStyle: 'cinematic',
+    seed: Math.floor(Math.random()*1000000),
+    aspectRatio: '16:9',
+    secondsPerScene: 10,
+    chapters: [],   // {id, title, summary, startSec, endSec}
+    scenes: [],     // {id, chapterId, narration, visualPrompt, camera, durationSec, overlay:{style,handle,text}, imageData, audioData, audioDurationSec}
+    pronunciation: [], // {word, sayAs}
+    muteExport: false,
+    fontFamily: 'Fraunces',
+    fontSize: 46,
+    fontWeight: '700',
+    captionPos: 'bottom',
+    history: [],
+  };
+}
+
+let state = defaultState();
+let openSections = new Set(['s00','s01']);
+
+function saveHistorySnapshot(label){
+  state.history.unshift({
+    id: uid(),
+    label: label || `Proyek ${new Date().toLocaleString('id-ID')}`,
+    savedAt: Date.now(),
+    snapshot: JSON.parse(JSON.stringify({...state, history:undefined}))
+  });
+  state.history = state.history.slice(0,20);
+}
+
+/* ---------------- Chat/Script API ---------------- */
+async function callChatAPI(systemPrompt, userPrompt){
+  const {scriptFormat, scriptBaseUrl, scriptKey, scriptModel} = state.api;
+  if(!scriptBaseUrl || !scriptKey) throw new Error('API Base URL / API Key naskah belum diisi (lihat bagian 00 Pengaturan API).');
+
+  if(scriptFormat === 'anthropic'){
+    const res = await fetch(scriptBaseUrl.replace(/\/$/,'') + '/messages', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': scriptKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: scriptModel,
+        max_tokens: 4096,
+        system: systemPrompt,
+        messages: [{role:'user', content:userPrompt}]
+      })
+    });
+    if(!res.ok) throw new Error('Chat API error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+    const data = await res.json();
+    return (data.content||[]).map(b=>b.text||'').join('\n');
+  } else {
+    const res = await fetch(scriptBaseUrl.replace(/\/$/,'') + '/chat/completions', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + scriptKey },
+      body: JSON.stringify({
+        model: scriptModel,
+        temperature: 0.85,
+        messages: [
+          {role:'system', content:systemPrompt},
+          {role:'user', content:userPrompt}
+        ]
+      })
+    });
+    if(!res.ok) throw new Error('Chat API error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+}
+
+function extractJSON(text){
+  // Strip markdown fences and grab the first {...} or [...] block
+  let t = text.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  try{ return JSON.parse(t); }catch(e){}
+  const m = t.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+  if(m){
+    try{ return JSON.parse(m[1]); }catch(e){}
+  }
+  throw new Error('Gagal parse JSON dari respons AI. Coba generate ulang.');
+}
+
+window.LontaraCore = {
+  $, $$, uid, escapeHtml, clamp, fmtTime,
+  CAMERA_OPTS, OVERLAY_STYLES, ASPECT_OPTS, VISUAL_STYLES, NEGATIVE_SUFFIX,
+  state, defaultState, saveHistorySnapshot,
+  callChatAPI, extractJSON,
+  get openSections(){ return openSections; }
+};
+
+})();
+
+
+/* ===================== Narrative Engine ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const state = C.state;
+
+function langLabel(){ return state.lang === 'en' ? 'English' : 'Bahasa Indonesia'; }
+
+function outlineSystemPrompt(){
+  const lang = langLabel();
+  return `Anda adalah script doctor untuk channel YouTube storytelling/podcast bergaya "reading viral internet stories" dengan retensi tinggi (mirip gaya narasi channel r/AskReddit atau "creepy story time" yang populer).
+
+Tugas Anda: memecah sebuah cerita/thread netizen menjadi struktur BAB (chapter) untuk video ${lang} berdurasi sekitar ${state.targetMinutes} menit.
+
+Prinsip storytelling yang WAJIB dipegang:
+- Bab 1 harus dibuka dengan HOOK kuat dalam 10-15 detik pertama: mulai dari titik paling menegangkan/menggelitik rasa penasaran, BUKAN kronologis dari awal. Boleh pakai teknik "in medias res" (mulai dari tengah konflik, baru mundur menjelaskan).
+- Setiap bab HARUS diakhiri dengan open loop / cliffhanger kalimat yang membuat penonton tidak mau skip ke bab berikutnya.
+- Bab tengah berisi eskalasi bertahap (bukan naik semua sekaligus) — bangun detail, red herring, dan momen "twist kecil" sebelum klimaks.
+- Bab terakhir berisi klimaks + resolusi + refleksi/kesimpulan yang mengundang komentar penonton (untuk boost engagement algoritma).
+- Total bab: sesuaikan dengan durasi (durasi pendek 5 menit = 3-4 bab, durasi 10 menit = 5-7 bab). Setiap bab dapat proporsi durasi (detik) yang realistis, totalnya harus sama dengan ${state.targetMinutes*60} detik.
+
+Balas HANYA dengan JSON array valid, tanpa teks lain, tanpa markdown fence, format:
+[
+  {"title": "judul bab singkat", "summary": "ringkasan naratif 2-4 kalimat tentang apa yang terjadi di bab ini dan bagaimana harus diakhiri (cliffhanger-nya apa)", "durationSec": 90}
+]`;
+}
+
+function outlineUserPrompt(){
+  const source = state.inputMode === 'thread' ? state.storyText : state.topicText;
+  const label = state.inputMode === 'thread' ? 'Thread/cerita mentah dari netizen' : 'Topik/ide singkat';
+  return `${label}:
+"""
+${source}
+"""
+
+Fakta/detail yang harus dipakai secara akurat (jangan mengarang di luar ini, untuk hal yang tidak disebutkan bicara secara umum saja):
+"""
+${state.facts || '(tidak ada catatan khusus)'}
+"""
+
+Buat struktur bab sesuai instruksi system prompt. Total durasi target: ${state.targetMinutes} menit (${state.targetMinutes*60} detik).`;
+}
+
+async function generateOutline(){
+  const raw = await C.callChatAPI(outlineSystemPrompt(), outlineUserPrompt());
+  const arr = C.extractJSON(raw);
+  if(!Array.isArray(arr) || !arr.length) throw new Error('Struktur bab kosong/tidak valid.');
+  let cursor = 0;
+  state.chapters = arr.map(ch=>{
+    const dur = Math.max(20, Math.round(ch.durationSec||60));
+    const c = { id:C.uid(), title:ch.title||'Bab', summary:ch.summary||'', startSec:cursor, endSec:cursor+dur };
+    cursor += dur;
+    return c;
+  });
+  state.scenes = state.scenes.filter(s=> state.chapters.some(c=>c.id===s.chapterId)); // safety
+  return state.chapters;
+}
+
+function sceneSystemPrompt(){
+  const lang = langLabel();
+  return `Anda adalah penulis naskah video storytelling ${lang} bergaya podcast yang membuat penasaran, dengan pacing yang dirancang untuk membuat penonton menonton sampai habis (high retention) dan berpotensi menonton ulang.
+
+Gaya bahasa:
+- Kalimat pendek-menengah, ritme seperti orang bercerita/podcast, bukan gaya artikel berita kaku.
+- Gunakan jeda dramatis, pertanyaan retoris sesekali, dan detail sensorik (apa yang dilihat/didengar/dirasakan) untuk membangun imersi.
+- Hindari kalimat pembuka klise seperti "Pada suatu hari" — langsung masuk ke momen yang menggigit.
+- Setiap 3-5 kalimat, selipkan detail baru atau pertanyaan yang membuat penonton penasaran akan kelanjutannya (micro-hook), supaya tidak ada bagian yang terasa datar.
+
+Tugas: pecah SATU bab cerita menjadi array scene. Setiap scene = satu potongan narasi pendek (1-3 kalimat, sekitar 10-20 detik jika dibacakan) + satu visual_prompt untuk AI image generator.
+
+Aturan visual_prompt (PENTING, akan dikirim ke Flux/Stability):
+- Tulis dalam Bahasa Inggris, kalimat deskriptif natural (bukan tag dipisah koma).
+- Sertakan komposisi kamera (wide shot/close up/medium shot dll), pencahayaan, dan suasana.
+- JANGAN sertakan instruksi gaya seni umum (itu akan ditambahkan otomatis oleh sistem) — cukup fokus ke SUBJEK, AKSI, dan KOMPOSISI adegan itu saja.
+- JANGAN minta teks/tulisan muncul di gambar.
+- Jangan sebut nama tokoh publik nyata/berhak cipta secara eksplisit kalau tidak esensial; gambarkan secara umum (mis. "a middle-aged Indonesian man" bukan nama asli).
+
+Balas HANYA dengan JSON array valid, tanpa teks lain, tanpa markdown fence, format:
+[
+  {"narration": "teks narasi yang akan dibacakan", "visual_prompt": "deskripsi visual dalam bahasa Inggris", "camera": "kenburns|zoompunch|slide|pushin|pullout|static"}
+]
+
+Pilih "camera" yang sesuai mood kalimat: pakai zoompunch/pushin untuk momen tegang atau reveal penting, slide untuk transisi antar tempat/waktu, kenburns untuk narasi umum, pullout untuk penutup bab atau momen "menarik jarak/refleksi", static untuk momen hening/mencekam.`;
+}
+
+function sceneUserPrompt(chapter){
+  return `Judul bab: ${chapter.title}
+Ringkasan & arah cerita bab ini: ${chapter.summary}
+Target durasi bab ini: ${chapter.endSec - chapter.startSec} detik (buat jumlah scene yang wajar, kira-kira 1 scene tiap 10-15 detik).
+
+Fakta wajib dipakai (kalau relevan dengan bab ini):
+"""
+${state.facts || '(tidak ada catatan khusus)'}
+"""
+
+Ingat: bab ini harus diakhiri dengan open loop/cliffhanger sesuai ringkasan di atas.`;
+}
+
+async function generateScenesForChapter(chapterId, onProgress){
+  const chapter = state.chapters.find(c=>c.id===chapterId);
+  if(!chapter) throw new Error('Bab tidak ditemukan');
+  const raw = await C.callChatAPI(sceneSystemPrompt(), sceneUserPrompt(chapter));
+  const arr = C.extractJSON(raw);
+  if(!Array.isArray(arr) || !arr.length) throw new Error('Scene kosong/tidak valid untuk bab: ' + chapter.title);
+  const newScenes = arr.map(sc=>({
+    id: C.uid(),
+    chapterId: chapter.id,
+    narration: sc.narration || '',
+    visualPrompt: sc.visual_prompt || sc.visualPrompt || '',
+    camera: C.CAMERA_OPTS.some(o=>o.id===sc.camera) ? sc.camera : 'kenburns',
+    durationSec: state.secondsPerScene,
+    overlay: { style:'none', handle:'', text:'' },
+    imageData: null,
+    audioData: null,
+    audioDurationSec: null,
+  }));
+  // replace any existing scenes for this chapter
+  state.scenes = state.scenes.filter(s=>s.chapterId!==chapterId).concat(newScenes);
+  // keep global scene order aligned with chapter order
+  const order = state.chapters.map(c=>c.id);
+  state.scenes.sort((a,b)=> order.indexOf(a.chapterId) - order.indexOf(b.chapterId));
+  if(onProgress) onProgress(chapter.title, newScenes.length);
+  return newScenes;
+}
+
+async function generateAllScenes(onProgress){
+  for(const ch of state.chapters){
+    await generateScenesForChapter(ch.id, onProgress);
+  }
+  recomputeChapterTimestamps();
+}
+
+function recomputeChapterTimestamps(){
+  let cursor = 0;
+  for(const ch of state.chapters){
+    const scenes = state.scenes.filter(s=>s.chapterId===ch.id);
+    const dur = scenes.reduce((sum,s)=> sum + (s.audioDurationSec || s.durationSec || state.secondsPerScene), 0);
+    ch.startSec = cursor;
+    ch.endSec = cursor + Math.max(dur, 1);
+    cursor = ch.endSec;
+  }
+}
+
+function chapterMarkersText(){
+  recomputeChapterTimestamps();
+  return state.chapters.map(c=> `${C.fmtTime(c.startSec)} ${c.title}`).join('\n');
+}
+
+function applyPronunciation(text){
+  let t = text;
+  for(const p of state.pronunciation){
+    if(!p.word) continue;
+    const re = new RegExp(p.word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+    t = t.replace(re, p.sayAs || p.word);
+  }
+  return t;
+}
+
+C.generateOutline = generateOutline;
+C.generateScenesForChapter = generateScenesForChapter;
+C.generateAllScenes = generateAllScenes;
+C.recomputeChapterTimestamps = recomputeChapterTimestamps;
+C.chapterMarkersText = chapterMarkersText;
+C.applyPronunciation = applyPronunciation;
+
+})();
+
+
+/* ===================== Image + Audio Media Engine ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const state = C.state;
+
+function buildFullPrompt(scene){
+  const style = C.VISUAL_STYLES.find(s=>s.id===state.visualStyle) || C.VISUAL_STYLES[0];
+  return `${scene.visualPrompt}, ${style.suffix}, ${C.NEGATIVE_SUFFIX}`;
+}
+
+function aspectWH(){
+  const a = C.ASPECT_OPTS.find(o=>o.id===state.aspectRatio) || C.ASPECT_OPTS[0];
+  return {w:a.w, h:a.h, ratio:a.id};
+}
+
+async function blobToDataURL(blob){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(blob);
+  });
+}
+
+/* ---- Stability AI ---- */
+async function genImageStability(prompt){
+  const {w,h} = aspectWH();
+  const ar = state.aspectRatio; // stability accepts aspect_ratio strings like "16:9"
+  const form = new FormData();
+  form.append('prompt', prompt);
+  form.append('aspect_ratio', ar);
+  form.append('seed', String(state.seed));
+  form.append('output_format', 'png');
+  const res = await fetch('https://api.stability.ai/v2beta/stable-image/generate/core', {
+    method:'POST',
+    headers:{ 'Authorization':'Bearer ' + state.api.imageKey, 'Accept':'image/*' },
+    body: form
+  });
+  if(!res.ok) throw new Error('Stability AI error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+  const blob = await res.blob();
+  return blobToDataURL(blob);
+}
+
+/* ---- Google Gemini / Imagen ---- */
+async function genImageGemini(prompt){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${encodeURIComponent(state.api.imageKey)}`;
+  const res = await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      instances: [{ prompt }],
+      parameters: { sampleCount: 1, aspectRatio: state.aspectRatio }
+    })
+  });
+  if(!res.ok) throw new Error('Gemini/Imagen error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+  const data = await res.json();
+  const b64 = data?.predictions?.[0]?.bytesBase64Encoded;
+  if(!b64) throw new Error('Gemini/Imagen: tidak ada gambar di respons.');
+  return 'data:image/png;base64,' + b64;
+}
+
+/* ---- Leonardo AI (create then poll) ---- */
+async function genImageLeonardo(prompt){
+  const {w,h} = aspectWH();
+  const createRes = await fetch('https://cloud.leonardo.ai/api/rest/v1/generations', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + state.api.imageKey },
+    body: JSON.stringify({ prompt, width: Math.min(w,1536), height: Math.min(h,1536), num_images:1, seed: state.seed })
+  });
+  if(!createRes.ok) throw new Error('Leonardo AI error: ' + createRes.status + ' ' + (await createRes.text()).slice(0,300));
+  const createData = await createRes.json();
+  const genId = createData?.sdGenerationJob?.generationId;
+  if(!genId) throw new Error('Leonardo AI: generationId tidak ditemukan.');
+
+  for(let i=0;i<30;i++){
+    await new Promise(r=>setTimeout(r, 3000));
+    const pollRes = await fetch(`https://cloud.leonardo.ai/api/rest/v1/generations/${genId}`, {
+      headers:{ 'Authorization':'Bearer ' + state.api.imageKey }
+    });
+    if(!pollRes.ok) continue;
+    const pollData = await pollRes.json();
+    const images = pollData?.generations_by_pk?.generated_images;
+    if(images && images.length){
+      return images[0].url;
+    }
+  }
+  throw new Error('Leonardo AI: timeout menunggu gambar selesai.');
+}
+
+/* ---- Fal.ai (Flux 2 Pro) ---- */
+async function genImageFal(prompt){
+  const {ratio} = aspectWH();
+  const imageSize = ratio === '9:16' ? 'portrait_16_9' : (ratio === '1:1' ? 'square_hd' : 'landscape_16_9');
+  const res = await fetch('https://fal.run/fal-ai/flux-pro/v1.1', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Key ' + state.api.imageKey },
+    body: JSON.stringify({ prompt, image_size: imageSize, seed: state.seed, num_images:1 })
+  });
+  if(!res.ok) throw new Error('Fal.ai error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+  const data = await res.json();
+  const url = data?.images?.[0]?.url;
+  if(!url) throw new Error('Fal.ai: tidak ada gambar di respons.');
+  return url;
+}
+
+async function genImageForScene(scene){
+  const prompt = buildFullPrompt(scene);
+  switch(state.api.imageProvider){
+    case 'stability': return genImageStability(prompt);
+    case 'gemini': return genImageGemini(prompt);
+    case 'leonardo': return genImageLeonardo(prompt);
+    case 'fal': default: return genImageFal(prompt);
+  }
+}
+
+async function generateAllImages(onProgress){
+  for(let i=0;i<state.scenes.length;i++){
+    const scene = state.scenes[i];
+    try{
+      scene.imageData = await genImageForScene(scene);
+    }catch(err){
+      if(onProgress) onProgress(i, state.scenes.length, scene, err);
+      throw err;
+    }
+    if(onProgress) onProgress(i+1, state.scenes.length, scene, null);
+    await new Promise(r=>setTimeout(r, 300)); // be gentle with rate limits
+  }
+}
+
+/* ---------------- ElevenLabs TTS ---------------- */
+async function genAudioForScene(scene){
+  if(!state.api.ttsKey || !state.api.ttsVoiceId) throw new Error('API Key / Voice ID ElevenLabs belum diisi.');
+  const text = C.applyPronunciation(scene.narration);
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${state.api.ttsVoiceId}`, {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'xi-api-key': state.api.ttsKey,
+      'Accept':'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: state.api.ttsModel || 'eleven_multilingual_v2',
+      voice_settings: { stability:0.45, similarity_boost:0.8, style:0.35, use_speaker_boost:true }
+    })
+  });
+  if(!res.ok) throw new Error('ElevenLabs error: ' + res.status + ' ' + (await res.text()).slice(0,300));
+  const blob = await res.blob();
+  const dataUrl = await blobToDataURL(blob);
+  const dur = await getAudioDuration(dataUrl);
+  scene.audioData = dataUrl;
+  scene.audioDurationSec = dur;
+  return {dataUrl, dur};
+}
+
+function getAudioDuration(dataUrl){
+  return new Promise((resolve)=>{
+    const a = new Audio();
+    a.preload = 'metadata';
+    a.onloadedmetadata = ()=> resolve(a.duration || state.secondsPerScene);
+    a.onerror = ()=> resolve(state.secondsPerScene);
+    a.src = dataUrl;
+  });
+}
+
+async function generateAllAudio(onProgress){
+  for(let i=0;i<state.scenes.length;i++){
+    const scene = state.scenes[i];
+    try{
+      await genAudioForScene(scene);
+    }catch(err){
+      if(onProgress) onProgress(i, state.scenes.length, scene, err);
+      throw err;
+    }
+    if(onProgress) onProgress(i+1, state.scenes.length, scene, null);
+    await new Promise(r=>setTimeout(r, 150));
+  }
+  C.recomputeChapterTimestamps();
+}
+
+C.genImageForScene = genImageForScene;
+C.generateAllImages = generateAllImages;
+C.genAudioForScene = genAudioForScene;
+C.generateAllAudio = generateAllAudio;
+C.buildFullPrompt = buildFullPrompt;
+C.aspectWH = aspectWH;
+
+})();
+
+
+/* ===================== Canvas Render + Export Engine ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const state = C.state;
+
+const imageCache = new Map(); // scene.id -> HTMLImageElement
+
+function loadImage(src){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=>resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function getSceneImage(scene){
+  if(!scene.imageData) return null;
+  if(imageCache.has(scene.id)) return imageCache.get(scene.id);
+  const img = await loadImage(scene.imageData);
+  imageCache.set(scene.id, img);
+  return img;
+}
+
+/* Draw image "cover" fit with a camera transform applied, t in [0,1] over the scene's duration */
+function drawCameraFrame(ctx, img, cw, ch, camera, t){
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  const canvasRatio = cw/ch, imgRatio = iw/ih;
+  // base cover scale
+  let baseW, baseH;
+  if(imgRatio > canvasRatio){ baseH = ih; baseW = ih*canvasRatio; } else { baseW = iw; baseH = iw/canvasRatio; }
+  const cx = iw/2, cy = ih/2;
+
+  let scale = 1, dx = 0, dy = 0;
+  const ease = t; // linear; could ease-in-out if desired
+  switch(camera){
+    case 'zoompunch': {
+      // fast zoom in first 25%, then hold
+      const p = t < 0.25 ? (t/0.25) : 1;
+      scale = 1 + 0.18 * easeOutCubic(p);
+      break;
+    }
+    case 'pushin': scale = 1 + 0.16*ease; break;
+    case 'pullout': scale = 1.16 - 0.16*ease; break;
+    case 'slide': {
+      scale = 1.08;
+      dx = (ease-0.5) * (baseW*0.16);
+      break;
+    }
+    case 'static': scale = 1.03 + 0.02*ease; break;
+    case 'kenburns':
+    default: {
+      scale = 1.05 + 0.09*ease;
+      dx = (ease-0.5) * (baseW*0.05);
+      dy = (0.5-ease) * (baseH*0.03);
+      break;
+    }
+  }
+  const srcW = baseW/scale, srcH = baseH/scale;
+  const srcX = clampNum(cx - srcW/2 + dx, 0, iw-srcW);
+  const srcY = clampNum(cy - srcH/2 + dy, 0, ih-srcH);
+  ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, cw, ch);
+}
+function clampNum(v,min,max){ return Math.max(min, Math.min(max, isFinite(max)&&max>=min?max:min, v)); }
+function easeOutCubic(x){ return 1 - Math.pow(1-x, 3); }
+
+function wrapText(ctx, text, maxWidth){
+  const words = text.split(' ');
+  const lines = [];
+  let cur = '';
+  for(const w of words){
+    const test = cur ? cur + ' ' + w : w;
+    if(ctx.measureText(test).width > maxWidth && cur){
+      lines.push(cur); cur = w;
+    } else cur = test;
+  }
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+function drawCaption(ctx, cw, ch, text){
+  if(!text) return;
+  const fontSize = Math.round(state.fontSize * (cw/1080));
+  ctx.font = `${state.fontWeight} ${fontSize}px ${state.fontFamily}, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  const maxWidth = cw*0.86;
+  const lines = wrapText(ctx, text, maxWidth);
+  const lineHeight = fontSize*1.28;
+  const posY = state.captionPos === 'top' ? ch*0.12 : ch*0.82;
+  const startY = posY - (lines.length-1)*lineHeight/2;
+
+  lines.forEach((line,i)=>{
+    const y = startY + i*lineHeight;
+    ctx.lineWidth = fontSize*0.16;
+    ctx.strokeStyle = 'rgba(0,0,0,0.75)';
+    ctx.lineJoin = 'round';
+    ctx.strokeText(line, cw/2, y);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(line, cw/2, y);
+  });
+}
+
+function drawOverlayCard(ctx, cw, ch, scene){
+  const ov = scene.overlay;
+  if(!ov || ov.style === 'none' || !ov.text) return;
+  const padding = cw*0.045;
+  const cardW = cw*0.82;
+  ctx.save();
+  ctx.font = `500 ${Math.round(cw*0.022)}px Inter, sans-serif`;
+  const lines = wrapText(ctx, ov.text, cardW - padding*2);
+  const lineH = cw*0.030;
+  const headerH = cw*0.045;
+  const cardH = headerH + lines.length*lineH + padding*1.6;
+  const cardX = (cw-cardW)/2;
+  const cardY = ch*0.10;
+
+  ctx.fillStyle = 'rgba(15,15,17,0.92)';
+  roundRect(ctx, cardX, cardY, cardW, cardH, cw*0.02);
+  ctx.fill();
+
+  const accentColor = {x:'#1D9BF0', reddit:'#FF4500', quora:'#B92B27', chat:'#25D366'}[ov.style] || '#888';
+  ctx.fillStyle = accentColor;
+  roundRect(ctx, cardX, cardY, cw*0.012, cardH, 0);
+  ctx.fill();
+
+  // avatar circle
+  const avR = cw*0.018;
+  ctx.beginPath();
+  ctx.arc(cardX+padding+avR, cardY+padding*0.9+avR, avR, 0, Math.PI*2);
+  ctx.fillStyle = accentColor;
+  ctx.fill();
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = `700 ${Math.round(cw*0.022)}px Inter, sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.fillText(ov.handle || platformLabel(ov.style), cardX+padding+avR*2+8, cardY+padding*0.9+avR+cw*0.007);
+
+  ctx.fillStyle = '#E5E5E5';
+  ctx.font = `400 ${Math.round(cw*0.022)}px Inter, sans-serif`;
+  lines.forEach((line,i)=>{
+    ctx.fillText(line, cardX+padding, cardY+headerH+padding*0.6+i*lineH);
+  });
+  ctx.restore();
+}
+function platformLabel(style){ return {x:'@thread', reddit:'u/anonim', quora:'Pengguna Quora', chat:'Pesan Masuk'}[style] || ''; }
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+async function renderFrame(ctx, cw, ch, scene, t){
+  ctx.clearRect(0,0,cw,ch);
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,cw,ch);
+  const img = await getSceneImage(scene);
+  if(img) drawCameraFrame(ctx, img, cw, ch, scene.camera, t);
+  drawOverlayCard(ctx, cw, ch, scene);
+  drawCaption(ctx, cw, ch, scene.narration);
+}
+
+/* ---------------- Preview (rAF driven, simple sequential playback) ---------------- */
+let previewState = { playing:false, sceneIdx:0, raf:null, audioEl:null };
+
+function stopPreview(){
+  previewState.playing = false;
+  if(previewState.raf) cancelAnimationFrame(previewState.raf);
+  if(previewState.audioEl){ previewState.audioEl.pause(); previewState.audioEl = null; }
+}
+
+async function playPreview(canvas, onSceneChange){
+  stopPreview();
+  previewState.playing = true;
+  const ctx = canvas.getContext('2d');
+  const {w,h} = C.aspectWH();
+  canvas.width = w; canvas.height = h;
+
+  for(let i=0;i<state.scenes.length && previewState.playing;i++){
+    const scene = state.scenes[i];
+    if(onSceneChange) onSceneChange(i);
+    const dur = (scene.audioDurationSec || scene.durationSec || state.secondsPerScene);
+    let audioEl = null;
+    if(!state.muteExport && scene.audioData){
+      audioEl = new Audio(scene.audioData);
+      previewState.audioEl = audioEl;
+      audioEl.play().catch(()=>{});
+    }
+    const start = performance.now();
+    await new Promise(resolve=>{
+      function step(){
+        if(!previewState.playing){ resolve(); return; }
+        const elapsed = (performance.now()-start)/1000;
+        const t = Math.min(1, elapsed/dur);
+        renderFrame(ctx, w, h, scene, t);
+        if(elapsed >= dur){ resolve(); return; }
+        previewState.raf = requestAnimationFrame(step);
+      }
+      step();
+    });
+    if(audioEl) audioEl.pause();
+  }
+  previewState.playing = false;
+}
+
+/* ---------------- Export: canvas video + Web Audio combined -> WebM ---------------- */
+async function exportVideo(canvas, onProgress){
+  const {w,h} = C.aspectWH();
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // preload all images first
+  for(const scene of state.scenes) await getSceneImage(scene);
+
+  const fps = 30;
+  const videoStream = canvas.captureStream(fps);
+  let combinedStream = videoStream;
+  let audioCtx = null, destNode = null, sources = [];
+
+  const durations = state.scenes.map(s=> s.audioDurationSec || s.durationSec || state.secondsPerScene);
+  const totalDur = durations.reduce((a,b)=>a+b, 0);
+
+  if(!state.muteExport){
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    destNode = audioCtx.createMediaStreamDestination();
+    let cursor = 0;
+    for(let i=0;i<state.scenes.length;i++){
+      const scene = state.scenes[i];
+      if(scene.audioData){
+        const buf = await fetch(scene.audioData).then(r=>r.arrayBuffer());
+        const audioBuffer = await audioCtx.decodeAudioData(buf.slice(0));
+        const src = audioCtx.createBufferSource();
+        src.buffer = audioBuffer;
+        src.connect(destNode);
+        sources.push({src, when: cursor});
+      }
+      cursor += durations[i];
+    }
+    combinedStream = new MediaStream([
+      ...videoStream.getVideoTracks(),
+      ...destNode.stream.getAudioTracks()
+    ]);
+  }
+
+  const chunks = [];
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus' : 'video/webm';
+  const recorder = new MediaRecorder(combinedStream, {mimeType});
+  recorder.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data); };
+
+  const donePromise = new Promise(resolve=>{ recorder.onstop = resolve; });
+  recorder.start();
+  const t0 = performance.now();
+  if(audioCtx){
+    for(const s of sources) s.src.start(audioCtx.currentTime + 0.05, 0);
+  }
+
+  let sceneStart = 0;
+  for(let i=0;i<state.scenes.length;i++){
+    const scene = state.scenes[i];
+    const dur = durations[i];
+    await new Promise(resolve=>{
+      function step(){
+        const elapsed = (performance.now()-t0)/1000 - sceneStart;
+        const t = Math.min(1, Math.max(0, elapsed/dur));
+        renderFrame(ctx, w, h, scene, t);
+        if(onProgress) onProgress(sceneStart+Math.min(elapsed,dur), totalDur, i);
+        if(elapsed >= dur){ resolve(); return; }
+        requestAnimationFrame(step);
+      }
+      step();
+    });
+    sceneStart += dur;
+  }
+
+  recorder.stop();
+  await donePromise;
+  if(audioCtx) audioCtx.close();
+
+  const blob = new Blob(chunks, {type:'video/webm'});
+  return blob;
+}
+
+C.stopPreview = stopPreview;
+C.playPreview = playPreview;
+C.exportVideo = exportVideo;
+C.renderFrame = renderFrame;
+
+})();
+
+
+/* ===================== UI — Panels 00, 01, 02 ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const {$, $$, escapeHtml, fmtTime} = C;
+const state = C.state;
+
+function panelShell(id, num, title, bodyHtml){
+  const open = C.openSections.has(id);
+  return `<section class="panel ${open?'open':''}" id="${id}" data-panel="${id}">
+    <div class="panel-head" data-toggle="${id}">
+      <span class="num">${num}</span>
+      <h2>${title}</h2>
+      <span class="chev">▾</span>
+    </div>
+    <div class="panel-body">${bodyHtml}</div>
+  </section>`;
+}
+
+/* -------- 00 API SETTINGS -------- */
+function renderPanel00(){
+  const a = state.api;
+  return panelShell('s00','00','Pengaturan API', `
+    <div class="field">
+      <label>Format Naskah (Chat API)</label>
+      <div class="toggle-group">
+        <div class="toggle-opt ${a.scriptFormat==='openai'?'active':''}" data-set="api.scriptFormat" data-val="openai">OpenAI-compatible</div>
+        <div class="toggle-opt ${a.scriptFormat==='anthropic'?'active':''}" data-set="api.scriptFormat" data-val="anthropic">Anthropic-compatible</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>API Base URL</label><input type="text" data-bind="api.scriptBaseUrl" value="${escapeHtml(a.scriptBaseUrl)}" placeholder="https://api.openai.com/v1"></div>
+      <div class="field"><label>Model</label><input type="text" data-bind="api.scriptModel" value="${escapeHtml(a.scriptModel)}" placeholder="gpt-4o-mini"></div>
+    </div>
+    <div class="field"><label>API Key (Naskah)</label><input type="password" data-bind="api.scriptKey" value="${escapeHtml(a.scriptKey)}"></div>
+
+    <div class="field" style="margin-top:22px;">
+      <label>Provider Gambar AI</label>
+      <select data-bind="api.imageProvider">
+        <option value="fal" ${a.imageProvider==='fal'?'selected':''}>Fal.ai (Flux 2 Pro) — presisi tinggi</option>
+        <option value="stability" ${a.imageProvider==='stability'?'selected':''}>Stability AI</option>
+        <option value="gemini" ${a.imageProvider==='gemini'?'selected':''}>Google Gemini (Imagen)</option>
+        <option value="leonardo" ${a.imageProvider==='leonardo'?'selected':''}>Leonardo AI</option>
+      </select>
+    </div>
+    <div class="field"><label>API Key (Gambar)</label><input type="password" data-bind="api.imageKey" value="${escapeHtml(a.imageKey)}"></div>
+
+    <div class="field" style="margin-top:22px;">
+      <label>ElevenLabs — Narasi Suara AI</label>
+      <div class="row">
+        <div class="field"><label>API Key</label><input type="password" data-bind="api.ttsKey" value="${escapeHtml(a.ttsKey)}"></div>
+        <div class="field"><label>Voice ID</label><input type="text" data-bind="api.ttsVoiceId" value="${escapeHtml(a.ttsVoiceId)}" placeholder="cth: voice id dari elevenlabs.io/app/voice-library"></div>
+      </div>
+      <div class="field"><label>Model</label>
+        <select data-bind="api.ttsModel">
+          <option value="eleven_multilingual_v2" ${a.ttsModel==='eleven_multilingual_v2'?'selected':''}>eleven_multilingual_v2 — konsisten untuk narasi panjang</option>
+          <option value="eleven_flash_v2_5" ${a.ttsModel==='eleven_flash_v2_5'?'selected':''}>eleven_flash_v2_5 — lebih cepat/murah</option>
+          <option value="eleven_v3" ${a.ttsModel==='eleven_v3'?'selected':''}>eleven_v3 — paling ekspresif (alpha)</option>
+        </select>
+      </div>
+      <div class="hint">Cari voice Indonesia bertag "storyteller/narrative" di elevenlabs.io/app/voice-library, salin Voice ID-nya ke sini. Kosongkan API Key + centang "Export Bisu" di bagian 04 kalau mau isi VO manual sendiri di CapCut.</div>
+    </div>
+
+    <div class="hint" style="margin-top:16px;">Semua API key disimpan hanya di memori browser selama sesi ini. Tutup tab = key hilang. Pakai Export Config untuk simpan config sebagai file.</div>
+    <div class="btn-row">
+      <button data-action="exportConfig">Export Config (.json)</button>
+      <button data-action="importConfig">Import Config</button>
+      <input type="file" id="importConfigFile" accept="application/json" style="display:none;">
+    </div>
+  `);
+}
+
+/* -------- 01 STORY SOURCE -------- */
+function renderPanel01(){
+  return panelShell('s01','01','Sumber Cerita', `
+    <div class="field">
+      <label>Bahasa Narasi</label>
+      <div class="toggle-group">
+        <div class="toggle-opt ${state.lang==='id'?'active':''}" data-set="lang" data-val="id">Indonesia</div>
+        <div class="toggle-opt ${state.lang==='en'?'active':''}" data-set="lang" data-val="en">English</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Mode Input Cerita</label>
+      <div class="toggle-group">
+        <div class="toggle-opt ${state.inputMode==='thread'?'active':''}" data-set="inputMode" data-val="thread">Paste Thread/Cerita Mentah</div>
+        <div class="toggle-opt ${state.inputMode==='topic'?'active':''}" data-set="inputMode" data-val="topic">Topik Singkat</div>
+      </div>
+    </div>
+
+    ${state.inputMode==='thread' ? `
+      <div class="field">
+        <label>Thread / Cerita Viral Netizen (paste teks mentah)</label>
+        <textarea data-bind="storyText" style="min-height:160px;" placeholder="Tempel thread X/Reddit/Facebook di sini apa adanya...">${escapeHtml(state.storyText)}</textarea>
+        <div class="hint">Tidak perlu dirapikan dulu — AI akan menyusun ulang jadi naskah storytelling. Hapus username/link kalau ada, cukup isi ceritanya.</div>
+      </div>
+    ` : `
+      <div class="field">
+        <label>Topik / Ide Cerita</label>
+        <textarea data-bind="topicText" style="min-height:90px;" placeholder="Misal: misteri hilangnya kapal di Segitiga Masalembo tahun 1981...">${escapeHtml(state.topicText)}</textarea>
+      </div>
+    `}
+
+    <div class="field">
+      <label>Fakta/Detail Terverifikasi yang Harus Dipakai (opsional tapi disarankan)</label>
+      <textarea data-bind="facts" placeholder="Nama, tanggal, lokasi, angka pasti yang harus akurat...">${escapeHtml(state.facts)}</textarea>
+      <div class="hint">Makin lengkap kolom ini, makin kecil risiko AI mengarang detail yang salah.</div>
+    </div>
+
+    <div class="row">
+      <div class="field"><label>Target Durasi Video (menit)</label><input type="number" min="3" max="15" data-bind="targetMinutes" value="${state.targetMinutes}"></div>
+      <div class="field"><label>Perkiraan Detik per Scene</label><input type="number" min="6" max="20" data-bind="secondsPerScene" value="${state.secondsPerScene}"></div>
+    </div>
+  `);
+}
+
+/* -------- 02 NARRATIVE OUTLINE -------- */
+function chapterColor(i){
+  const colors = ['#C77D3E','#6E9B7B','#8E7BC7','#C7A83E','#C7623E','#3EA1C7'];
+  return colors[i%colors.length];
+}
+
+function renderChapterTimeline(){
+  if(!state.chapters.length) return '<div class="inline-note">Belum ada struktur bab. Klik "Generate Struktur Bab" di bawah.</div>';
+  const total = state.chapters[state.chapters.length-1].endSec || 1;
+  const segs = state.chapters.map((c,i)=>{
+    const widthPct = Math.max(4, ((c.endSec-c.startSec)/total)*100);
+    return `<div class="chapter-seg" style="width:${widthPct}%; background:${chapterColor(i)}22; color:${chapterColor(i)};" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</div>`;
+  }).join('');
+  const legend = state.chapters.map((c,i)=> `<span><i style="background:${chapterColor(i)}"></i>${fmtTime(c.startSec)}–${fmtTime(c.endSec)} ${escapeHtml(c.title)}</span>`).join('');
+  return `<div class="chapter-timeline">${segs}</div><div class="chapter-legend">${legend}</div>`;
+}
+
+function renderChapterList(){
+  if(!state.chapters.length) return '';
+  return state.chapters.map((c,i)=>{
+    const sceneCount = state.scenes.filter(s=>s.chapterId===c.id).length;
+    return `<div class="scene-card">
+      <div class="scene-top">
+        <span class="scene-idx" style="background:${chapterColor(i)}22;color:${chapterColor(i)}">Bab ${i+1}</span>
+        <span class="scene-chapter-tag">${fmtTime(c.startSec)}–${fmtTime(c.endSec)} · ${sceneCount} scene</span>
+      </div>
+      <div class="field" style="margin:6px 0;">
+        <input type="text" data-chapter-id="${c.id}" data-field="title" value="${escapeHtml(c.title)}">
+      </div>
+      <div class="field" style="margin:6px 0;">
+        <textarea data-chapter-id="${c.id}" data-field="summary" style="min-height:50px;">${escapeHtml(c.summary)}</textarea>
+      </div>
+      <div class="btn-row">
+        <button data-action="genScenesForChapter" data-chapter-id="${c.id}">${sceneCount ? 'Generate Ulang Scene Bab Ini' : 'Generate Scene Bab Ini'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPanel02(){
+  return panelShell('s02','02','Naskah — Struktur Bab', `
+    <div class="hint">AI akan membaca cerita/thread lalu memecahnya jadi beberapa bab dengan hook di awal dan cliffhanger di tiap penutup bab, sesuai target durasi.</div>
+    <div class="btn-row">
+      <button class="primary" data-action="genOutline">Generate Struktur Bab</button>
+    </div>
+    <div id="chapterTimelineWrap">${renderChapterTimeline()}</div>
+    <div id="chapterListWrap">${renderChapterList()}</div>
+    ${state.chapters.length ? `<div class="btn-row"><button class="primary" data-action="genAllScenes">Generate Semua Scene (semua bab sekaligus)</button></div>` : ''}
+    <div id="s02progress"></div>
+  `);
+}
+
+C.panelShell = panelShell;
+C.renderPanel00 = renderPanel00;
+C.renderPanel01 = renderPanel01;
+C.renderPanel02 = renderPanel02;
+C.renderChapterTimeline = renderChapterTimeline;
+C.renderChapterList = renderChapterList;
+C.chapterColor = chapterColor;
+
+})();
+
+
+/* ===================== UI — Panel 03: Scene & Gambar ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const {$, $$, escapeHtml, fmtTime, CAMERA_OPTS, OVERLAY_STYLES, ASPECT_OPTS, VISUAL_STYLES} = C;
+const state = C.state;
+
+function sceneCard(scene, idx){
+  const chapterIdx = state.chapters.findIndex(c=>c.id===scene.chapterId);
+  const chapter = state.chapters[chapterIdx];
+  const camOpts = CAMERA_OPTS.map(o=>`<option value="${o.id}" ${scene.camera===o.id?'selected':''}>${o.label}</option>`).join('');
+  const ovOpts = OVERLAY_STYLES.map(o=>`<option value="${o.id}" ${scene.overlay.style===o.id?'selected':''}>${o.label}</option>`).join('');
+  const thumb = scene.imageData
+    ? `<img src="${scene.imageData}" alt="scene ${idx+1}">`
+    : `Belum ada gambar`;
+  return `<div class="scene-card" data-scene-card="${scene.id}">
+    <div class="scene-top">
+      <span class="scene-idx">Scene ${idx+1}</span>
+      <span class="scene-chapter-tag">${chapter ? escapeHtml(chapter.title) : ''} · ${scene.audioDurationSec ? scene.audioDurationSec.toFixed(1)+'s (audio)' : scene.durationSec+'s (perkiraan)'}</span>
+      <button class="ghost" style="margin-left:auto;padding:4px 8px;" data-action="deleteScene" data-scene-id="${scene.id}">✕</button>
+    </div>
+    <div class="scene-thumb" data-scene-thumb="${scene.id}">${thumb}</div>
+    <div class="field" style="margin:6px 0;">
+      <label>Narasi</label>
+      <textarea data-scene-id="${scene.id}" data-field="narration">${escapeHtml(scene.narration)}</textarea>
+    </div>
+    <div class="field" style="margin:6px 0;">
+      <label>Visual Prompt (EN)</label>
+      <textarea data-scene-id="${scene.id}" data-field="visualPrompt">${escapeHtml(scene.visualPrompt)}</textarea>
+    </div>
+    <div class="scene-grid">
+      <div class="field" style="margin:4px 0;">
+        <label>Gerak Kamera</label>
+        <select data-scene-id="${scene.id}" data-field="camera">${camOpts}</select>
+      </div>
+      <div class="field" style="margin:4px 0;">
+        <label>Durasi (detik, jika tanpa audio)</label>
+        <input type="number" min="4" max="30" data-scene-id="${scene.id}" data-field="durationSec" value="${scene.durationSec}">
+      </div>
+    </div>
+    <div class="scene-grid">
+      <div class="field" style="margin:4px 0;">
+        <label>Overlay Kartu Thread</label>
+        <select data-scene-id="${scene.id}" data-field="overlayStyle">${ovOpts}</select>
+      </div>
+      <div class="field" style="margin:4px 0;">
+        <label>Nama/Handle di Kartu</label>
+        <input type="text" data-scene-id="${scene.id}" data-field="overlayHandle" value="${escapeHtml(scene.overlay.handle)}" placeholder="@username">
+      </div>
+    </div>
+    ${scene.overlay.style!=='none' ? `
+    <div class="field" style="margin:4px 0;">
+      <label>Teks Kutipan di Kartu</label>
+      <textarea data-scene-id="${scene.id}" data-field="overlayText" style="min-height:40px;">${escapeHtml(scene.overlay.text)}</textarea>
+    </div>` : ''}
+    <div class="btn-row">
+      <button data-action="genOneImage" data-scene-id="${scene.id}">${scene.imageData?'Generate Ulang Gambar':'Generate Gambar'}</button>
+      <button data-action="genOneAudio" data-scene-id="${scene.id}">${scene.audioData?'Generate Ulang Audio':'Generate Audio'}</button>
+      ${scene.audioData ? `<audio controls src="${scene.audioData}" style="height:32px;vertical-align:middle;"></audio>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderSceneList(){
+  if(!state.scenes.length) return '<div class="inline-note">Belum ada scene. Generate struktur bab dulu di bagian 02, lalu generate scene per bab.</div>';
+  return state.scenes.map((s,i)=>sceneCard(s,i)).join('');
+}
+
+function renderPanel03(){
+  const styleOpts = VISUAL_STYLES.map(s=>`<option value="${s.id}" ${state.visualStyle===s.id?'selected':''}>${s.label}</option>`).join('');
+  const aspectOpts = ASPECT_OPTS.map(a=>`<option value="${a.id}" ${state.aspectRatio===a.id?'selected':''}>${a.label}</option>`).join('');
+  return C.panelShell('s03','03','Scene & Gambar', `
+    <div class="row">
+      <div class="field">
+        <label>Gaya Visual (semua scene)</label>
+        <select data-bind="visualStyle">${styleOpts}</select>
+      </div>
+      <div class="field">
+        <label>Aspect Ratio</label>
+        <select data-bind="aspectRatio">${aspectOpts}</select>
+      </div>
+    </div>
+    <div class="hint">gaya: <b>${VISUAL_STYLES.find(s=>s.id===state.visualStyle)?.label.split(' — ')[0]}</b> · seed: <span style="font-family:var(--font-mono)">${state.seed}</span> <button class="ghost" style="padding:2px 8px;font-size:11px;" data-action="rerollSeed">🎲 Ganti Seed</button></div>
+    <div class="btn-row">
+      <button class="primary" data-action="genAllImages">Generate Semua Gambar</button>
+    </div>
+    <div id="s03progress"></div>
+    <div id="sceneListWrap">${renderSceneList()}</div>
+  `);
+}
+
+C.sceneCard = sceneCard;
+C.renderSceneList = renderSceneList;
+C.renderPanel03 = renderPanel03;
+
+})();
+
+
+/* ===================== UI — Panels 04, 05, 06 ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const {$, $$, escapeHtml, fmtTime} = C;
+const state = C.state;
+
+/* -------- 04 AUDIO -------- */
+function renderPronunciationList(){
+  if(!state.pronunciation.length) return '<div class="inline-note">Belum ada entri kamus pelafalan.</div>';
+  return state.pronunciation.map((p,i)=>`
+    <div class="row" data-pron-idx="${i}" style="align-items:flex-end;">
+      <div class="field" style="margin:4px 0;"><label>Kata/Nama</label><input type="text" data-pron-field="word" data-pron-idx="${i}" value="${escapeHtml(p.word)}"></div>
+      <div class="field" style="margin:4px 0;"><label>Cara Baca</label><input type="text" data-pron-field="sayAs" data-pron-idx="${i}" value="${escapeHtml(p.sayAs)}"></div>
+      <button class="ghost" style="margin-bottom:14px;" data-action="deletePron" data-pron-idx="${i}">✕</button>
+    </div>
+  `).join('');
+}
+
+function renderPanel04(){
+  return C.panelShell('s04','04','Audio Narasi', `
+    <div class="field">
+      <label class="toggle-opt" style="display:inline-flex;align-items:center;gap:8px;width:auto;cursor:pointer;">
+        <input type="checkbox" id="muteExportChk" ${state.muteExport?'checked':''}> Export Bisu (tanpa audio — isi VO manual di CapCut)
+      </label>
+    </div>
+    ${!state.muteExport ? `
+    <div class="btn-row">
+      <button class="primary" data-action="genAllAudio">Generate Semua Audio Narasi</button>
+    </div>
+    <div id="s04progress"></div>
+    ` : `<div class="hint">Export bisu aktif — audio tidak akan digenerate/diikutkan ke render final.</div>`}
+
+    <div class="field" style="margin-top:18px;">
+      <label>Kamus Pelafalan (nama/istilah yang sering salah ucap)</label>
+      <div id="pronListWrap">${renderPronunciationList()}</div>
+      <button data-action="addPron">+ Tambah Entri</button>
+    </div>
+  `);
+}
+
+/* -------- 05 PREVIEW & RENDER -------- */
+function renderPanel05(){
+  const totalDur = state.scenes.reduce((sum,s)=> sum + (s.audioDurationSec||s.durationSec||state.secondsPerScene), 0);
+  return C.panelShell('s05','05','Preview & Render', `
+    <div class="row">
+      <div class="field"><label>Font Caption</label>
+        <select data-bind="fontFamily">
+          <option value="Fraunces" ${state.fontFamily==='Fraunces'?'selected':''}>Fraunces — serif dramatis</option>
+          <option value="Inter" ${state.fontFamily==='Inter'?'selected':''}>Inter — bersih, modern</option>
+          <option value="'JetBrains Mono'" ${state.fontFamily==="'JetBrains Mono'"?'selected':''}>JetBrains Mono — gaya dokumen/arsip</option>
+        </select>
+      </div>
+      <div class="field"><label>Posisi Caption</label>
+        <select data-bind="captionPos">
+          <option value="bottom" ${state.captionPos==='bottom'?'selected':''}>Bawah</option>
+          <option value="top" ${state.captionPos==='top'?'selected':''}>Atas</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Ukuran Font (px, basis 1080)</label><input type="number" min="24" max="80" data-bind="fontSize" value="${state.fontSize}"></div>
+    </div>
+
+    <div class="hint">Total durasi diperkirakan: <b>${fmtTime(totalDur)}</b> (${state.scenes.length} scene, ${state.chapters.length} bab)</div>
+
+    <canvas id="previewCanvas" width="960" height="540"></canvas>
+    <div class="btn-row">
+      <button data-action="playPreview">▶ Preview</button>
+      <button data-action="stopPreview">⏸ Stop</button>
+    </div>
+
+    <div class="btn-row">
+      <button class="primary" data-action="renderExport">Render & Download (.webm)</button>
+    </div>
+    <div class="progress-bar"><div id="renderProgressBar"></div></div>
+    <div class="inline-note" id="renderStatusText"></div>
+
+    <div class="field" style="margin-top:18px;">
+      <label>Chapter Markers (untuk deskripsi YouTube)</label>
+      <div class="code-out" id="chapterMarkersOut">${escapeHtml(C.chapterMarkersText ? C.chapterMarkersText() : '')}</div>
+      <div class="btn-row"><button data-action="copyMarkers">Salin ke Clipboard</button></div>
+    </div>
+  `);
+}
+
+/* -------- 06 HISTORY -------- */
+function renderPanel06(){
+  const items = state.history.map(h=>`
+    <div class="scene-card">
+      <div class="scene-top"><span class="scene-idx">${new Date(h.savedAt).toLocaleString('id-ID')}</span></div>
+      <div style="margin:6px 0;">${escapeHtml(h.label)}</div>
+      <div class="btn-row">
+        <button data-action="loadHistory" data-history-id="${h.id}">Muat Proyek Ini</button>
+      </div>
+    </div>
+  `).join('') || '<div class="inline-note">Belum ada riwayat di sesi ini.</div>';
+
+  return C.panelShell('s06','06','Riwayat Proyek', `
+    <div class="hint">Riwayat di sini cuma hidup selama tab ini terbuka. Untuk simpan permanen, pakai Export Project — bisa dibuka lagi kapanpun.</div>
+    <div class="btn-row">
+      <button data-action="saveHistory">💾 Simpan Proyek Saat Ini ke Riwayat</button>
+      <button data-action="exportProject">Export Project (.json)</button>
+      <button data-action="importProject">Import Project</button>
+      <input type="file" id="importProjectFile" accept="application/json" style="display:none;">
+    </div>
+    <div id="historyListWrap">${items}</div>
+  `);
+}
+
+C.renderPanel04 = renderPanel04;
+C.renderPanel05 = renderPanel05;
+C.renderPanel06 = renderPanel06;
+C.renderPronunciationList = renderPronunciationList;
+
+})();
+
+
+/* ===================== Main Wiring ===================== */
+(function(){
+"use strict";
+const C = window.LontaraCore;
+const {$, $$} = C;
+const state = C.state;
+
+function fullRender(){
+  const app = $('#app');
+  app.innerHTML = [
+    C.renderPanel00(),
+    C.renderPanel01(),
+    C.renderPanel02(),
+    C.renderPanel03(),
+    C.renderPanel04(),
+    C.renderPanel05(),
+    C.renderPanel06(),
+  ].join('');
+}
+
+function refreshPanel(id){
+  const el = document.getElementById(id);
+  if(!el) return fullRender();
+  const map = {s00:C.renderPanel00, s01:C.renderPanel01, s02:C.renderPanel02, s03:C.renderPanel03, s04:C.renderPanel04, s05:C.renderPanel05, s06:C.renderPanel06};
+  const html = map[id]();
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  el.replaceWith(wrap.firstElementChild);
+}
+
+function setDeep(obj, path, val){
+  const parts = path.split('.');
+  let cur = obj;
+  for(let i=0;i<parts.length-1;i++) cur = cur[parts[i]];
+  cur[parts[parts.length-1]] = val;
+}
+function getDeep(obj, path){
+  return path.split('.').reduce((o,k)=> o? o[k] : undefined, obj);
+}
+
+function showStatus(elId, text, isError){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = isError ? 'var(--bad)' : 'var(--text-faint)';
+}
+function setProgress(elId, pct){
+  const el = document.getElementById(elId);
+  if(el) el.style.width = clampPct(pct)+'%';
+}
+function clampPct(p){ return Math.max(0, Math.min(100, p)); }
+
+/* ---------------- Event delegation ---------------- */
+document.addEventListener('click', async (e)=>{
+  const toggle = e.target.closest('[data-toggle]');
+  if(toggle){
+    const id = toggle.dataset.toggle;
+    const panel = document.getElementById(id);
+    if(C.openSections.has(id)){ C.openSections.delete(id); panel.classList.remove('open'); }
+    else { C.openSections.add(id); panel.classList.add('open'); }
+    return;
+  }
+
+  const setOpt = e.target.closest('[data-set]');
+  if(setOpt){
+    setDeep(state, setOpt.dataset.set, setOpt.dataset.val);
+    refreshPanel(setOpt.closest('section.panel').id);
+    return;
+  }
+
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+
+  try{
+    if(action==='exportConfig') return exportConfig();
+    if(action==='importConfig') return document.getElementById('importConfigFile').click();
+    if(action==='exportProject') return exportProject();
+    if(action==='importProject') return document.getElementById('importProjectFile').click();
+    if(action==='saveHistory'){ C.saveHistorySnapshot(); refreshPanel('s06'); return; }
+    if(action==='loadHistory'){ return loadHistory(btn.dataset.historyId); }
+
+    if(action==='genOutline'){
+      btn.disabled = true; btn.textContent = 'Menyusun struktur bab...';
+      await C.generateOutline();
+      refreshPanel('s02');
+      return;
+    }
+    if(action==='genScenesForChapter'){
+      btn.disabled = true; btn.textContent = 'Menulis scene...';
+      await C.generateScenesForChapter(btn.dataset.chapterId);
+      C.recomputeChapterTimestamps();
+      refreshPanel('s02'); refreshPanel('s03'); refreshPanel('s05');
+      return;
+    }
+    if(action==='genAllScenes'){
+      btn.disabled = true;
+      await C.generateAllScenes((title, n)=>{
+        showStatus('s02progress', `Selesai: ${title} (${n} scene)`);
+      });
+      btn.disabled = false;
+      refreshPanel('s02'); refreshPanel('s03'); refreshPanel('s05');
+      return;
+    }
+
+    if(action==='rerollSeed'){ state.seed = Math.floor(Math.random()*1000000); refreshPanel('s03'); return; }
+    if(action==='deleteScene'){
+      state.scenes = state.scenes.filter(s=>s.id!==btn.dataset.sceneId);
+      refreshPanel('s03'); refreshPanel('s05');
+      return;
+    }
+    if(action==='genOneImage'){
+      const scene = state.scenes.find(s=>s.id===btn.dataset.sceneId);
+      btn.disabled = true; btn.textContent = 'Menggambar...';
+      try{ scene.imageData = await C.genImageForScene(scene); }
+      finally{ btn.disabled = false; }
+      refreshPanel('s03');
+      return;
+    }
+    if(action==='genAllImages'){
+      btn.disabled = true;
+      try{
+        await C.generateAllImages((done,total,scene,err)=>{
+          setProgress('s03progress', done/total*100);
+          showStatus('s03progress', err ? `Gagal di scene ${done+1}: ${err.message}` : `Gambar ${done}/${total} selesai`, !!err);
+          const thumb = document.querySelector(`[data-scene-thumb="${scene.id}"]`);
+          if(thumb && scene.imageData) thumb.innerHTML = `<img src="${scene.imageData}">`;
+        });
+      } finally { btn.disabled = false; }
+      return;
+    }
+
+    if(action==='genOneAudio'){
+      const scene = state.scenes.find(s=>s.id===btn.dataset.sceneId);
+      btn.disabled = true; btn.textContent = 'Merekam suara...';
+      try{ await C.genAudioForScene(scene); C.recomputeChapterTimestamps(); }
+      finally{ btn.disabled = false; }
+      refreshPanel('s03'); refreshPanel('s05');
+      return;
+    }
+    if(action==='genAllAudio'){
+      btn.disabled = true;
+      try{
+        await C.generateAllAudio((done,total,scene,err)=>{
+          setProgress('s04progress', done/total*100);
+          showStatus('s04progress', err ? `Gagal di scene ${done+1}: ${err.message}` : `Audio ${done}/${total} selesai`, !!err);
+        });
+      } finally { btn.disabled = false; }
+      refreshPanel('s03'); refreshPanel('s05');
+      return;
+    }
+
+    if(action==='addPron'){ state.pronunciation.push({word:'', sayAs:''}); refreshPanel('s04'); return; }
+    if(action==='deletePron'){ state.pronunciation.splice(Number(btn.dataset.pronIdx),1); refreshPanel('s04'); return; }
+
+    if(action==='playPreview'){
+      const canvas = document.getElementById('previewCanvas');
+      C.playPreview(canvas, (i)=> showStatus('renderStatusText', `Preview scene ${i+1}/${state.scenes.length}`));
+      return;
+    }
+    if(action==='stopPreview'){ C.stopPreview(); return; }
+
+    if(action==='renderExport'){
+      if(!state.scenes.length){ alert('Belum ada scene untuk dirender.'); return; }
+      btn.disabled = true;
+      showStatus('renderStatusText', 'Merender video...');
+      try{
+        const canvas = document.getElementById('previewCanvas');
+        const blob = await C.exportVideo(canvas, (elapsed, total, sceneIdx)=>{
+          setProgress('renderProgressBar', elapsed/total*100);
+          showStatus('renderStatusText', `Merender scene ${sceneIdx+1}/${state.scenes.length} — ${C.fmtTime(elapsed)}/${C.fmtTime(total)}`);
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'lontara-longform.webm';
+        document.body.appendChild(a); a.click(); a.remove();
+        showStatus('renderStatusText', 'Selesai! File terunduh.');
+      }catch(err){
+        showStatus('renderStatusText', 'Gagal render: ' + err.message, true);
+      } finally { btn.disabled = false; }
+      return;
+    }
+
+    if(action==='copyMarkers'){
+      const text = C.chapterMarkersText();
+      await navigator.clipboard.writeText(text);
+      showStatus('renderStatusText', 'Chapter markers disalin ke clipboard.');
+      return;
+    }
+  }catch(err){
+    console.error(err);
+    alert('Terjadi error: ' + err.message);
+    btn.disabled = false;
+  }
+});
+
+document.addEventListener('input', (e)=>{
+  const t = e.target;
+  if(t.dataset.bind){
+    let val = t.value;
+    if(t.type==='number') val = Number(val);
+    setDeep(state, t.dataset.bind, val);
+    if(t.dataset.bind === 'inputMode') refreshPanel('s01');
+    return;
+  }
+  if(t.dataset.sceneId && t.dataset.field){
+    const scene = state.scenes.find(s=>s.id===t.dataset.sceneId);
+    if(!scene) return;
+    const f = t.dataset.field;
+    if(f==='overlayStyle') scene.overlay.style = t.value;
+    else if(f==='overlayHandle') scene.overlay.handle = t.value;
+    else if(f==='overlayText') scene.overlay.text = t.value;
+    else if(f==='durationSec') scene.durationSec = Number(t.value);
+    else scene[f] = t.value;
+    if(f==='overlayStyle') refreshPanel('s03');
+    return;
+  }
+  if(t.dataset.chapterId && t.dataset.field){
+    const ch = state.chapters.find(c=>c.id===t.dataset.chapterId);
+    if(ch) ch[t.dataset.field] = t.value;
+    return;
+  }
+  if(t.dataset.pronField){
+    const p = state.pronunciation[Number(t.dataset.pronIdx)];
+    if(p) p[t.dataset.pronField] = t.value;
+    return;
+  }
+  if(t.id==='muteExportChk'){ state.muteExport = t.checked; refreshPanel('s04'); return; }
+});
+
+document.addEventListener('change', (e)=>{
+  const t = e.target;
+  if(t.dataset.bind && t.tagName==='SELECT'){
+    setDeep(state, t.dataset.bind, t.value);
+    if(t.dataset.bind==='visualStyle' || t.dataset.bind==='aspectRatio') refreshPanel('s03');
+    return;
+  }
+  if(t.id==='importConfigFile' && t.files[0]) return readJsonFile(t.files[0], (data)=>{ state.api = {...state.api, ...data}; fullRender(); });
+  if(t.id==='importProjectFile' && t.files[0]) return readJsonFile(t.files[0], (data)=>{ Object.assign(state, data); fullRender(); });
+});
+
+function readJsonFile(file, cb){
+  const reader = new FileReader();
+  reader.onload = ()=>{ try{ cb(JSON.parse(reader.result)); }catch(e){ alert('File JSON tidak valid.'); } };
+  reader.readAsText(file);
+}
+
+function exportConfig(){
+  downloadJSON(state.api, 'lontara-longform-config.json');
+}
+function exportProject(){
+  const {history, ...rest} = state;
+  downloadJSON(rest, 'lontara-longform-project.json');
+}
+function downloadJSON(obj, filename){
+  const blob = new Blob([JSON.stringify(obj,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function loadHistory(id){
+  const h = state.history.find(x=>x.id===id);
+  if(!h) return;
+  const hist = state.history;
+  Object.assign(state, h.snapshot);
+  state.history = hist;
+  fullRender();
+}
+
+fullRender();
+
+})();
+
+</script>
+</body>
+</html>
